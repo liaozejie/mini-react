@@ -25,7 +25,7 @@ function childReconciler(shouldTrackEffects: boolean) {
 		return fiber;
 	}
 
-	function placSingleChild(fiber: FiberNode) {
+	function placeSingleChild(fiber: FiberNode) {
 		if (shouldTrackEffects && fiber.alternate === null) {
 			// 首屏渲染
 			fiber.flags |= Placement;
@@ -41,7 +41,7 @@ function childReconciler(shouldTrackEffects: boolean) {
 		if (typeof newChild === 'object' && newChild !== null) {
 			switch (newChild.$$typeof) {
 				case REACT_ELEMENT_TYPE:
-					return placSingleChild(
+					return placeSingleChild(
 						reconcileSingleElement(returnFiber, currentFiber, newChild)
 					);
 				default:
@@ -55,7 +55,7 @@ function childReconciler(shouldTrackEffects: boolean) {
 
 		// HostText
 		if (typeof newChild === 'string' || typeof newChild === 'number') {
-			return placSingleChild(
+			return placeSingleChild(
 				reconcileSingleTextNode(returnFiber, currentFiber, newChild)
 			);
 		}
