@@ -3,8 +3,14 @@
 import { IReactElement } from 'shared/ReactTypes';
 import { FiberNode } from './fiber';
 import { UpdateQueue, processUpdateQueue } from './updateQueue';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 import { mountChildFibers, reconcileChildFibers } from './childFibers';
+import { renderWithHooks } from './fiberHooks';
 
 export const beginWork = (wip: FiberNode) => {
 	// 比较React Element和fiberNode，返回子fiberNode
@@ -13,6 +19,8 @@ export const beginWork = (wip: FiberNode) => {
 			return updateHostRoot(wip);
 		case HostComponent:
 			return updateHostComponent(wip);
+		case FunctionComponent:
+			return updateFunctionComponent(wip);
 		case HostText:
 			return null;
 		default:
@@ -23,6 +31,12 @@ export const beginWork = (wip: FiberNode) => {
 	}
 	return null;
 };
+
+function updateFunctionComponent(wip: FiberNode) {
+	const nextChildren = renderWithHooks(wip);
+	reconcileChildren(wip, nextChildren);
+	return wip.child;
+}
 
 function updateHostRoot(wip: FiberNode) {
 	const baseState = wip.memorizeState;
