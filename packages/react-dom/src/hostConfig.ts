@@ -1,12 +1,16 @@
+import { Props } from 'shared/ReactTypes';
+import { updateFiberProps, DOMElement } from './SyntheticEvent';
+
 export type Container = Element;
 export type Instance = Element;
 export type TextInstance = Text;
 
 // createInstance = (type: string, props: any): Element
-export const createInstance = (type: string): Element => {
+export const createInstance = (type: string, props: Props): Element => {
 	// TODO 处理props
-	const element = document.createElement(type);
-	return element;
+	const element = document.createElement(type) as unknown;
+	updateFiberProps(element as DOMElement, props);
+	return element as DOMElement;
 };
 
 export const appendInitialChild = (
